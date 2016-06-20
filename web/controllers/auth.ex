@@ -10,8 +10,15 @@ defmodule Rumbl.Auth do
 
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
-    user    = user_id && repo.get(Rumbl.User, user_id)
-    assign(conn, :current_user, user)
+
+    cond do
+      user = conn.assigns[:current_user] ->
+        conn
+      user = user_id && repo.get(Rumbl.User, user_id) ->
+        assign(conn, :current_user, user)
+      true ->
+        assign(conn, :current_user, nil)
+    end
   end
   
   def login(conn, user) do
@@ -48,7 +55,7 @@ defmodule Rumbl.Auth do
     else
       conn
       |> put_flash(:error, "You must be logged in to access that page")
-      |> redirect(to: Helper.page_path(conn, :index))
+      |> redirect(to: Helpers.page_path(conn, :index))
       |> halt()
     end
   end
