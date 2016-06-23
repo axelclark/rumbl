@@ -6,6 +6,7 @@ defmodule Rumbl.UserSocket do
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
+    timeout: 45_000
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   @max_age 2 * 7 * 24 * 60 * 60
